@@ -3,7 +3,15 @@ import React, { Component } from "react";
 import CandidateService from "../src/services/candidate.service";
 import Search from "../src/components/Search";
 import CandidateCard from "../src/components/CandidateCard";
+import styled from "styled-components";
+import { Route, Switch } from "react-router-dom";
+import CandidateDetail from "./components/CandidateDetail";
 
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 40px;
+`;
 class App extends Component {
   constructor(props) {
     super(props);
@@ -11,9 +19,12 @@ class App extends Component {
       candidateList: [],
       viewList: [],
       searchedCandidate: "",
+      rejectedList: [],
+      shortlistedList: [],
     };
     this.handleCandidateSearch = this.handleCandidateSearch.bind(this);
     this.getCandidateList = this.getCandidateList.bind(this);
+    this.getRejectedList = this.getRejectedList.bind(this);
   }
   componentDidMount() {
     this.getCandidateList();
@@ -24,6 +35,15 @@ class App extends Component {
         candidateList: response.data,
         viewList: response.data,
       });
+    });
+  }
+  getRejectedList(id) {
+    console.log("Rejected list", id);
+    this.setState({
+      rejectedList: [
+        ...this.state.rejectedList,
+        ...this.state.candidateList.filter((candidate) => candidate.id === id),
+      ],
     });
   }
   handleCandidateSearch(event) {
@@ -43,26 +63,43 @@ class App extends Component {
       viewList: [...tempList],
     });
   }
-
   render() {
     return (
       <main>
-        <div className="search-section">
-          <Search
-            candidateName={this.state.searchedCandidate}
-            searchCandidate={this.handleCandidateSearch}
-          />
-        </div>
-
-        <div className="cards-list">
-          {this.state.viewList.length === 0 ? (
-            <h1 className="no-result-header"> No Results </h1>
-          ) : (
-            this.state.viewList.map((candidate) => (
-              <CandidateCard key={candidate.id} {...candidate} />
-            ))
-          )}
-        </div>
+        <Switch>
+          <Route
+            path="/:id"
+            render={(props) => (
+              <CandidateDetail rejectedList={this.getRejectedList} {...props} />
+            )}
+          ></Route>
+          <Route exact path="/">
+            <div className="search-section">
+              <Search
+                candidateName={this.state.searchedCandidate}
+                searchCandidate={this.handleCandidateSearch}
+              />
+            </div>
+            <Grid>
+              {this.state.viewList.length === 0 ? (
+                <h1 className="no-result-header"> No Results </h1>
+              ) : (
+                this.state.viewList.map((candidate) => (
+                  <CandidateCard key={candidate.id} {...candidate} />
+                ))
+              )}
+            </Grid>
+            <Grid>
+              {this.state.rejectedList.length === 0 ? (
+                <h1 className="no-result-header"> No Results </h1>
+              ) : (
+                this.state.rejectedList.map((candidate) => (
+                  <CandidateCard key={candidate.id} {...candidate} />
+                ))
+              )}
+            </Grid>
+          </Route>
+        </Switch>
       </main>
     );
   }
