@@ -1,5 +1,5 @@
 import "./Search.css";
-const Search = ({ candidateName, searchCandidate, filterCandidate }) => {
+const Search = ({ candidateName, searchCandidate }) => {
   return (
     <div>
       <input

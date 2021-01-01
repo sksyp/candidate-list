@@ -11,7 +11,6 @@ class App extends Component {
       candidateList: [],
       viewList: [],
       searchedCandidate: "",
-      display: false,
     };
     this.handleCandidateSearch = this.handleCandidateSearch.bind(this);
     this.getCandidateList = this.getCandidateList.bind(this);
@@ -28,40 +27,22 @@ class App extends Component {
     });
   }
   handleCandidateSearch(event) {
-    this.setState({
-      searchedCandidate: event.target.value,
-      viewList: this.state.candidateList.filter((candidate) =>
+    const keyword = event.target.value;
+    let tempList = [];
+    if (keyword === "") {
+      tempList = this.state.candidateList;
+    } else {
+      tempList = this.state.candidateList.filter((candidate) =>
         candidate.name.toLowerCase().includes(this.state.searchedCandidate)
-      ),
+      );
+    }
+    console.log(keyword);
+    console.log(tempList);
+    this.setState({
+      searchedCandidate: keyword,
+      viewList: [...tempList],
     });
-    if (this.state.viewList.length === 0) {
-      this.setState({
-        display: true,
-      });
-    }
-
-    if (this.state.searchedCandidate.length === 0) {
-      console.log("Inside searchde");
-      this.setState({
-        viewList: this.state.candidateList,
-        display: false,
-      });
-    }
   }
-
-  // filterCandidateList() {
-  //   const keyword = this.state.searchedCandidate;
-  //   this.setState({
-  //     viewList: this.state.candidateList.filter((candidate) =>
-  //       candidate.name.toLowerCase().includes(keyword)
-  //     ),
-  //   });
-  //   console.log(this.state.viewList);
-  //   if (!this.state.viewListl.length)
-  //     this.setState({
-  //       viewList: this.state.candidateList,
-  //     });
-  // }
 
   render() {
     return (
@@ -74,12 +55,13 @@ class App extends Component {
         </div>
 
         <div className="cards-list">
-          {this.state.display && (
+          {this.state.viewList.length === 0 ? (
             <h1 className="no-result-header"> No Results </h1>
+          ) : (
+            this.state.viewList.map((candidate) => (
+              <CandidateCard key={candidate.id} {...candidate} />
+            ))
           )}
-          {this.state.viewList.map((candidate) => (
-            <CandidateCard key={candidate.id} {...candidate} />
-          ))}
         </div>
       </main>
     );
