@@ -1,0 +1,10 @@
+.serach-input{
+    border-radius: 10px;
+}
+.search-button{
+    border-radius:  2px;
+    margin-left: 2px;
+}
+.search-button:hover{
+    cursor: pointer;
+}

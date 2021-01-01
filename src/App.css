@@ -1,0 +1,19 @@
+.cards-list {
+  /* margin: 10px;   */
+  align-content: center;
+  z-index: 0;
+  width: 100%;
+  display: flex;
+  justify-content: normal;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  margin-left: 5%;
+
+}
+.search-section{
+  float: right;
+  padding: 1%;
+}
+.no-search-header{
+  text-align: center;
+}
