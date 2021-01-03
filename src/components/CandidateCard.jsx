@@ -41,7 +41,7 @@ const CandidateCard = ({ id, Image, name}) => {
       }
     })}>
       <ImgWrapper>
-        <Img src={Image} alt="Not availalble" />
+        <Img src={Image} alt="Not available" />
       </ImgWrapper>
       <h4>{name}</h4>
     </Card>
